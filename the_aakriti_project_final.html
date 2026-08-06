@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Aakriti Project | Tales of the Timeless</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration for Custom Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            sand: '#FDFBF7',
+                            clay: '#9C4122',
+                            ochre: '#C0A062',
+                            charcoal: '#2C2C2C',
+                            stone: '#EAE5D9'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        body: ['"Lora"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #2C2C2C;
+            font-family: 'Lora', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C0A062;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9C4122;
+        }
+
+        /* Text Selection */
+        ::selection {
+            background-color: #9C4122;
+            color: #FDFBF7;
+        }
+
+        /* Drop Cap for Article Start */
+        .drop-cap::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.15em;
+            color: #9C4122;
+            font-weight: 700;
+        }
+
+        /* Fade-in Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image Hover Effects */
+        figure img {
+            transition: transform 0.5s ease, filter 0.5s ease;
+            cursor: zoom-in;
+        }
+        figure:hover img {
+            transform: scale(1.02);
+            filter: brightness(0.9);
+        }
+
+        /* Lightbox Styles */
+        #lightbox {
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+        }
+        #lightbox.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Reading Progress Bar */
+        #progress-bar {
+            height: 4px;
+            background: #9C4122;
+            width: 0%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+    <!-- Reading Progress -->
+    <div id="progress-bar"></div>
+
+    <!-- Header Navigation -->
+    <header class="fixed w-full top-0 bg-brand-sand/95 backdrop-blur-sm border-b border-brand-stone z-50 transition-all duration-300" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3">
+                    <!-- Unique Symbol: Stylized Tribal Motif (Inspired by Pithora Horses) -->
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-brand-clay">
+                        <path d="M50 10 L80 40 L70 90 L30 90 L20 40 Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                        <circle cx="50" cy="50" r="15" border="2" stroke="currentColor" stroke-width="4"/>
+                        <path d="M45 45 L55 55 M55 45 L45 55" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M10 50 Q 50 10 90 50" stroke="currentColor" stroke-width="4" fill="none"/>
+                    </svg>
+                    <div class="flex flex-col">
+                        <a href="#" class="font-serif text-2xl font-bold tracking-wider text-brand-charcoal leading-none">THE AAKRITI PROJECT</a>
+                        <span class="font-body text-sm italic text-brand-ochre tracking-widest mt-1">Tales of the Timeless.</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#foreword" class="text-brand-charcoal hover:text-brand-clay font-medium transition-colors text-sm uppercase tracking-wide">Foreword</a>
+                    <a href="#tradition" class="text-brand-charcoal hover:text-brand-clay font-medium transition-colors text-sm uppercase tracking-wide">The Tradition</a>
+                    <a href="#semiotics" class="text-brand-charcoal hover:text-brand-clay font-medium transition-colors text-sm uppercase tracking-wide">Semiotics</a>
+                    <a href="#archaeology" class="text-brand-charcoal hover:text-brand-clay font-medium transition-colors text-sm uppercase tracking-wide">Archaeology</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-brand-charcoal focus:outline-none" id="mobile-menu-btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden bg-brand-stone border-b border-brand-clay/20" id="mobile-menu">
+            <a href="#foreword" class="block px-4 py-3 text-sm hover:bg-brand-clay hover:text-white transition-colors">Foreword</a>
+            <a href="#tradition" class="block px-4 py-3 text-sm hover:bg-brand-clay hover:text-white transition-colors">The Tradition</a>
+            <a href="#semiotics" class="block px-4 py-3 text-sm hover:bg-brand-clay hover:text-white transition-colors">Semiotics</a>
+            <a href="#archaeology" class="block px-4 py-3 text-sm hover:bg-brand-clay hover:text-white transition-colors">Archaeology</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center reveal">
+        <h4 class="text-brand-clay font-bold tracking-widest uppercase text-sm mb-4">Featured Heritage Essay</h4>
+        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-brand-charcoal mb-6">
+            Beyond the Brush: Deciphering the Lithic Lineage and Ritual ‘Writing’ of Pithora in Chota Udepur
+        </h1>
+        <div class="flex flex-col items-center justify-center text-sm md:text-base text-gray-600 space-y-1 border-t border-b border-brand-stone py-4 my-8">
+            <p><span class="font-bold text-brand-charcoal">Author:</span> Abhik Mukherjee</p>
+            <p><span class="font-bold text-brand-charcoal">Affiliation:</span> Masters student (FYMA), Maharaja Sayajirao University, Baroda</p>
+            <a href="mailto:abhikmukherjee43@gmail.com" class="text-brand-clay hover:underline">abhikmukherjee43@gmail.com</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 text-lg leading-relaxed text-gray-800 space-y-12">
+
+        <!-- Abstract -->
+        <section id="foreword" class="reveal bg-brand-stone/40 p-8 md:p-12 rounded-xl border border-brand-stone shadow-sm">
+            <h2 class="font-serif text-2xl font-bold text-brand-charcoal mb-4 border-l-4 border-brand-clay pl-4">Foreword</h2>
+            <p class="mb-4">In the tribal heartland of Chota Udepur, Gujarat, a Pithora writing is frequently misread by the modern gaze as a primitive decorative art. This project challenges such reductionist labels by repositioning the Pithora as a sophisticated system of ritual "writing", a sacred semiotic device central to the devotional life of the Rathwa community. Drawing on original fieldwork, this study documents the district's prehistoric rock art sites to establish an ethnoarchaeological lineage between ancient lithic expressions and contemporary writings.</p>
+            <p class="mb-4">The research argues that the Pithora is an ontological map rather than a visual ornament. Through ethnographic documentation of the ritual process, from the invocation by the Badwa (priest) to the precise execution by the Lakhara (writer), the project illustrates how the writing functions as a living archive of Rathwa cosmology and social hierarchy. By analysing specific symbols, such as the stylized horses to motifs of everyday life the study unveils a sacred literacy that bridges the gap between the petroglyphs of the past and the mud walls of the present.</p>
+            <p class="mb-4">Central to this thesis is the community perspective: the Pithora is a "vow-fulfillment" mechanism where the act of "writing" the wall is a transformative spiritual labour. By shifting the scholarly gaze from "art history" to "ritual literacy," this project seeks to correct the common misconception of Pithora as a mere painting. Instead, it frames the tradition as a resilient regional "school" of visual communication that serves as the primary vessel for collective memory and social cohesion.</p>
+            <p class="text-sm text-gray-500 italic mt-6"><span class="font-bold">Keywords:</span> Rathwa Community, Chota Udepur, Pithora Ritual, Vow-Fulfillment Mechanism, Sacred Semiotics, Ritual Literacy.</p>
+        </section>
+
+        <!-- The Tradition -->
+        <section id="tradition" class="reveal space-y-6">
+            <h2 class="font-serif text-3xl font-bold text-brand-charcoal mb-6">The Rathwas, their Pithora tradition and a semiotic analysis</h2>
+            <p class="drop-cap">The Rathwa are a Scheduled Tribe historically concentrated in the hill and forest tracts of Chhota Udepur and adjoining talukas of eastern Gujarat, with links extending into the neighbouring border regions of Madhya Pradesh. Their designation is commonly explained through the term <i class="text-brand-clay">rathbistar</i>, meaning an inhabitant of a forested or hilly region, which reflects both their ecological setting and the historical geography of their settlement. In ethnographic literature, they are often described as a tribal community with a distinct dialect of Gujarati, known as Rathwi, and with cultural affinities to other Adivasi populations of the western Indian plateau.</p>
+            <p>The cultural life of the Rathwa is especially known for “Pithora ritual writing,” one of the most distinctive forms of tribal religious expression in western India. Pithora paintings are commissioned in fulfilment of vows made to Baba Pithora, the central protective deity of the community, usually in response to illness, crop failure, infertility, or other forms of crisis.</p>
+
+            <div class="my-10 bg-brand-clay text-white p-8 rounded-lg shadow-lg">
+                <h3 class="font-serif text-2xl font-bold mb-4">The Mythological Genesis of Baba Pithora</h3>
+                <p class="mb-4">Baba Pithora is the supreme deity of the Rathwa, embodying universal creation, grain, and household protection. His backstory begins with Baba Ind, the lord of rains, and his sisters, including Rani Kali Koyal and Rani Kajal.</p>
+                <p>Pithora was conceived out of wedlock following an encounter between Kali Koyal and Kandu Raja. Fearing social wrath, Kali Koyal abandoned the infant on a lotus leaf in the Ganga-Jamuna. He was rescued by Rani Kajal, who raised him on the milk of the Akdo tree and floral juices, providing him with a celestial education.</p>
+            </div>
+
+            <!-- Figure 1 -->
+            <figure class="my-10 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/mg7MLM6V/Baba-Pithora-depicted-in-Pithora-1.png" alt="Baba Pithora depicted in Pithora" loading="lazy" class="w-full h-auto rounded-lg shadow-md border-4 border-brand-stone">
+                <figcaption class="text-center text-sm text-gray-500 mt-3 italic">Baba Pithora depicted in Pithora</figcaption>
+            </figure>
+        </section>
+
+        <!-- Study Area & Perspectives -->
+        <section class="reveal space-y-6">
+            <h2 class="font-serif text-3xl font-bold text-brand-charcoal mb-6">Study Area & The Act of Writing</h2>
+            
+            <!-- Figure 2 -->
+            <figure class="float-right w-full md:w-1/2 ml-0 md:ml-6 mb-6 reveal">
+                <img src="https://i.postimg.cc/yd8SyG6f/Study-Area-Map-2.png" alt="The study area for documenting the Pithora tradition" loading="lazy" class="w-full h-auto rounded-lg shadow-md border border-brand-stone">
+                <figcaption class="text-center text-xs text-gray-500 mt-2 italic">The study area for documenting the Pithora tradition</figcaption>
+            </figure>
+
+            <p>The ethnographic research utilized a systematic field survey across Chota Udepur, employing qualitative methods like structured interviews and questionnaires. Data collection targeted three key stakeholder groups to capture the socio-religious framework of the Pithora tradition:</p>
+            <ul class="list-disc pl-6 space-y-2 mb-6 text-brand-charcoal">
+                <li><strong class="text-brand-clay">Village Communities:</strong> Perspectives on communal preservation.</li>
+                <li><strong class="text-brand-clay">Lakharas (Painters):</strong> Artisanal and material culture insights.</li>
+                <li><strong class="text-brand-clay">Badwas (Priests):</strong> Sacred and theological documentation.</li>
+            </ul>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-charcoal mt-8 mb-4">A Ghardhanis Perspective</h3>
+            <p>The ritual installation of a Pithora writing is a profound spiritual undertaking for the Rathwa community, transforming a home into a sacred site. For a Ghardhani (homeowner), the Pithora is a "living domestic covenant,” the fulfillment of a Mannat (vow) taken during survival crises like illness, livestock loss, or crop failure.</p>
+
+            <!-- Figure 3 -->
+            <figure class="my-8 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/JnYH6Qt5/The-Raj-Bhit-or-central-wall-3.jpg" alt="The Raj-Bhit or central wall divided into 3 sections" loading="lazy" class="w-full h-auto rounded-lg shadow-md">
+                <figcaption class="text-center text-sm text-gray-500 mt-3 italic">The Raj-Bhit or central wall divided into 3 sections</figcaption>
+            </figure>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-charcoal mt-8 mb-4">A Lakharas Perspective</h3>
+            <p>In the Rathwa community, the Lakhara (ritual scribe) is not merely an artisan but a vital intercessor between the human and spiritual realms. As explained by Padma Shri awardee Mr. Paresh Rathwa, the creation of a Pithora writing is the fulfillment of a Mannat, transforming a wall into a Devsthana (abode for the gods).</p>
+            
+            <!-- Grid for Fig 4 & 5 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/xC1b3Zjq/Paresh-Rathwa-at-Work-4.png" alt="Paresh Rathwa making a Pithora on a canvas" loading="lazy" class="w-full h-48 object-cover rounded shadow">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Paresh Rathwa making a Pithora on a canvas</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/9fV9rM6j/Heem-and-Jhanpo-5.png" alt="The heem (border) and jhanpo (gateway) created before a Pithora writing" loading="lazy" class="w-full h-48 object-cover rounded shadow">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">The heem (border) and jhanpo (gateway) created before a Pithora writing</figcaption>
+                </figure>
+            </div>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-charcoal mt-8 mb-4">A Badwas Perspective & The Ritual Night</h3>
+            <p>Within the Rathwa society, the Badwa transcends the definitions of a common priest or healer; he is the metaphysical architect of the community's survival. The climax occurs on Wednesday night during a singing session accompanied by Dhak or Damru drums. This psycho-acoustic environment induces a trance state called Pawan, where Pithoradeva enters the Badwa’s body.</p>
+            
+            <!-- Figure 6 -->
+            <figure class="my-8 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/ydp3QTWr/Venubhai-Aslabhai-with-drums-6.jpg" alt="Venubhai Aslabhai holding drums" loading="lazy" class="w-full h-auto rounded-lg shadow-md">
+                <figcaption class="text-center text-sm text-gray-500 mt-3 italic">Venubhai Aslabhai, hailing from Khajuria village, holding the drums that he plays during his trance</figcaption>
+            </figure>
+        </section>
+
+        <!-- Semiotics Gallery -->
+        <section id="semiotics" class="reveal space-y-6 pt-8 border-t border-brand-stone">
+            <h2 class="font-serif text-3xl font-bold text-brand-charcoal mb-4">A Semiotic Interpretation of the Pithora Writing</h2>
+            <p class="mb-8">The motifs in a Pithora painting are a sophisticated visual language that blends Rathwa mythology with the pragmatism of daily life. The painting is not a static artwork but a dynamic representation of the universe.</p>
+
+            <h3 class="font-serif text-xl font-bold text-brand-clay border-b border-brand-stone pb-2 mb-6">The Divine Assembly</h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                <!-- Fig 7 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/P51ZXZFv/Baba-Ganeh-7.png" alt="Baba Ganeh" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Baba Ganeh</figcaption>
+                </figure>
+                <!-- Fig 8 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/wjDJqJbm/Baba-Ind-8.png" alt="Baba Ind" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Baba Ind</figcaption>
+                </figure>
+                <!-- Fig 9 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/7LDzf6p2/Baba-Pithora-9.png" alt="Baba Pithora" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Baba Pithora</figcaption>
+                </figure>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <!-- Fig 10 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/hjt71Y4t/Pithora-rani-10.png" alt="Pithori Rani" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Pithori Rani</figcaption>
+                </figure>
+                <!-- Fig 11 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/sXgZ4LfS/Rani-Kajal-11.png" alt="Rani Kajal" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Rani Kajal</figcaption>
+                </figure>
+                <!-- Fig 12 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/65knxzzT/Baar-Matha-12.png" alt="Baar Matha no Dhani" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Baar Matha no Dhani</figcaption>
+                </figure>
+                <!-- Fig 13 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/mDgFynZF/Raja-Bhoj-13.png" alt="Raja Bhoj and his elephant" loading="lazy" class="w-full h-48 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Raja Bhoj and his elephant</figcaption>
+                </figure>
+            </div>
+
+            <div class="space-y-10 mb-12">
+                <div class="reveal">
+                    <h4 class="font-bold text-brand-charcoal text-xl mb-3">Abho Kunbi and Mathari</h4>
+                    <p class="mb-4">This farming couple created the art of agriculture. They are credited with teaching humanity how to till, sow, and harvest. Their presence in a Pithora writing anchors the Pithora in the physical labour of subsistence.</p>
+                    <figure class="cursor-pointer image-container">
+                        <img src="https://i.postimg.cc/qRJ2ZRwg/Abho-Kunbi-and-Mathari-14.png" alt="Abho Kunbi and Mathari" loading="lazy" class="w-full h-auto rounded-lg border border-brand-stone shadow-md">
+                        <figcaption class="text-xs text-center text-gray-500 mt-2">Abho Kunbi and Mathari</figcaption>
+                    </figure>
+                </div>
+                
+                <div class="reveal">
+                    <h4 class="font-bold text-brand-charcoal text-xl mb-3">Lakhari and Jokhari</h4>
+                    <p class="mb-4">Portrayed sitting on highchairs, these "authors of the future" visit a child on the fifth or sixth day of birth to write their destiny. They are credited with writing Pithora’s future on the wall, thereby initiating the very tradition the Lakharas continue.</p>
+                    <figure class="cursor-pointer image-container">
+                        <img src="https://i.postimg.cc/7LV2744r/Lakhari-and-Jokhari-15.png" alt="Lakhari and Jokhari" loading="lazy" class="w-full h-auto rounded-lg border border-brand-stone shadow-md">
+                        <figcaption class="text-xs text-center text-gray-500 mt-2">Lakhari and Jokhari</figcaption>
+                    </figure>
+                </div>
+
+                <div class="reveal">
+                    <h4 class="font-bold text-brand-charcoal text-xl mb-3">Purvaj na Panch Ghoda (The Ancestral Horses)</h4>
+                    <p class="mb-4">These five horses represent the community's ancestors, known as Khatrij Dev. In daily life, Rathwas place wooden carvings of these horses in farms or homes. In the painting, they are the first to be worshipped, ensuring the family remains connected to its lineage.</p>
+                    <figure class="cursor-pointer image-container">
+                        <img src="https://i.postimg.cc/d1VTjfQ1/Purvaj-na-Panch-Ghoda-16.png" alt="Purvaj na Panch Ghoda" loading="lazy" class="w-full max-w-sm mx-auto h-auto rounded-lg border border-brand-stone shadow-md">
+                        <figcaption class="text-xs text-center text-gray-500 mt-2">Purvaj na Panch Ghoda</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <h3 class="font-serif text-xl font-bold text-brand-clay border-b border-brand-stone pb-2 mb-6">Motifs of Nature & The Animal Kingdom</h3>
+            <p>Elements of nature are treated as living deities. The Sun (Huriyadev) and Moon (Handaryo Dev), sacred trees like the Kadam tree, and animals representing strength, righteousness, and ritual necessity play vital roles.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10 mt-6">
+                <!-- Fig 17 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/1zHq6SQL/Huriyadev-17.png" alt="Huriyadev and Handariyo deva" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Huriyadev</figcaption>
+                </figure>
+                <!-- Fig 18 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/9MQqYkXZ/Sacred-trees-18.jpg" alt="Sacred Trees" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Sacred Trees</figcaption>
+                </figure>
+                <!-- Fig 19 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/XJYykPNs/Saval-Dharmi-19.png" alt="Saval Dharmi Ghoda" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Saval Dharmi Ghoda</figcaption>
+                </figure>
+                <!-- Fig 20 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/QMs7HtRq/Domestic-Animals-20.png" alt="Domesticated animals" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Domesticated animals</figcaption>
+                </figure>
+                <!-- Fig 21 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/TwN57chC/Tigers-21.png" alt="Protector Tigers" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Protector Tigers</figcaption>
+                </figure>
+                <!-- Fig 22 -->
+                <figure class="reveal cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/YS3Wg77w/Mama-Karodiyo-22.png" alt="Mama Karodiyo" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center mt-2 text-gray-500">Mama Karodiyo</figcaption>
+                </figure>
+            </div>
+
+            <h3 class="font-serif text-xl font-bold text-brand-clay border-b border-brand-stone pb-2 mt-10 mb-6">Human Activities and Social Guardians</h3>
+            <p class="mb-4">The writing acts as a mirror to Rathwa society, depicting the Badwa conducting ceremonies, and daily labour such as churning buttermilk, drawing water from handpumps or the making of alcohol. Specific deities and guardians are also portrayed:</p>
+            <ul class="list-disc pl-6 space-y-2 mb-8 text-brand-charcoal">
+                <li><strong class="font-bold">Chowkidars (guardians):</strong> Originally shown with bows and now with guns, placed strategically to protect the "writing."</li>
+                <li><strong class="font-bold">Nakti Bhuten:</strong> A fierce deity on a white horse placed on the far left. He is the village protector; his name must be invoked before entering the village to ward off malevolent spirits.</li>
+                <li><strong class="font-bold">Kamadeva:</strong> A figure of structural importance included to ensure the continuation of the lineage and the birth of offspring.</li>
+            </ul>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/7LDzf6p3/Chowkidar-23.png" alt="Chowkidar" loading="lazy" class="w-full h-64 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Chowkidar</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/xC1b3Zjj/Nakti-Bhuten-24.png" alt="Nakti Bhuten" loading="lazy" class="w-full h-64 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Nakti Bhuten</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/tg5xPbjf/Kama-aspect-25.jpg" alt="Kama aspect in Pithora" loading="lazy" class="w-full h-64 object-cover rounded border border-gray-200 shadow-sm">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Kama aspect in Pithora</figcaption>
+                </figure>
+            </div>
+
+            <h3 class="font-serif text-xl font-bold text-brand-clay border-b border-brand-stone pb-2 mt-8 mb-6">Modernity and Manokamna</h3>
+            <p>A striking feature of contemporary Pithora paintings is the inclusion of "modern" motifs: trucks, buses, trains, clocks, and rifles. While critics see this as a dilution of tradition, Lakharas explain it through Manokamna (desire). As the Rathwa world changes, their prayers and desires evolve.</p>
+            
+            <figure class="my-6 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/V6Z0GF5Z/Trains-and-buses-illustrated-in-Pithora-26.png" alt="Trains and buses illustrated in Pithora" loading="lazy" class="w-full h-auto rounded-lg shadow-md">
+                <figcaption class="text-center text-sm text-gray-500 mt-2 italic">Trains and buses illustrated in Pithora</figcaption>
+            </figure>
+        </section>
+
+        <!-- Archaeology Section -->
+        <section id="archaeology" class="reveal space-y-6 pt-8 border-t border-brand-stone">
+            <h2 class="font-serif text-3xl font-bold text-brand-charcoal mb-6">Ethnoarchaeological Continuities between Rock Art and the Pithora Tradition</h2>
+            <p>Rock art refers to human-made markings, primarily petroglyphs (carvings) and pictographs (paintings), placed on natural stone surfaces. Archaeologist Robert Bednarik (2014) defines rock art as exograms, which are externalized memory traces. Unlike "engrams" stored in the brain, exograms allow humans to store and transmit complex symbolic information across generations outside of biological memory.</p>
+            <p>In India, rock art provides a continuous record from the Upper Paleolithic to the Historical period. This study systematically documents rock art across Gujarat’s Chota Udepur district, focusing on sites like Chitra Dungri and Kikawada (Ghoda Lekhan, Kikawada village base, Mandva Sil). Situated within the Vindhya and Satpura ranges, these shelters feature pictographs in red, white, ochre, and black. The imagery, comprising animals, geometric patterns, and hunting scenes, offers vital insights into the region's paleo-environmental and socio-cultural history.</p>
+            
+            <figure class="my-8 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/85zrmYkK/study-area-of-the-rock-art-sites-27.png" alt="The study area of the rock art sites" loading="lazy" class="w-full h-auto rounded-lg shadow-md border border-brand-stone">
+                <figcaption class="text-center text-xs text-gray-500 mt-2 italic">The study area of the rock art sites</figcaption>
+            </figure>
+
+            <p>The Chota Udepur district in Gujarat is a profound cultural intersection where lithic vestiges merge with the living ritual life of the Rathwas. This region serves as an extraordinary ethnoarchaeological laboratory, suggesting that the sacred rock art of the hills is not a defunct epoch, but the foundational layer of a ritual landscape manifested today in Pithora wall paintings. By examining motifs, ritual materiality, and spatial consumption, we discern a belief trajectory that has evolved from hunter-gatherer subsistence to complex tribal cosmologies, rooted in ancestral veneration and ecological reciprocity.</p>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-clay mt-8 mb-4">I) Parallels in Visual Symbology: The Evolution of Motifs</h3>
+            <p>The transition from rock surfaces at sites like Ghoda Lekhan, Mandva Sil, and Chitra Dungri to the plastered walls of domestic dwellings involves a recontextualization of symbols that have retained their significance for millennia.</p>
+            
+            <h4 class="font-bold text-brand-charcoal mt-6">Equine Centrality: From Rock Art to Pithoradeva</h4>
+            <p>The horse is the most dominant motif in both records. At Ghoda Lekhan, early renderings in red and white pigments suggest an early veneration of the animal. In the modern Pithora tradition, this reaches its zenith; the horse is no longer just a biological entity but the primary vessel for the divine. Pithora paintings are considered written rather than painted, signifying their role as a record of divine presence. Baba Pithora is always depicted on a horse, and the ritual itself is initiated to fulfil a vow to him.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/LsRPnXcS/Horse-and-rider-28.jpg" alt="Horse and rider, Mandva Sil rock art site" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Horse and rider, Mandva Sil rock art site</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/mrR9tD09/Baba-Pithoro-29.jpg" alt="Baba Pithoro, as illustrated in a Pithora writing" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Baba Pithoro, as illustrated in a Pithora writing</figcaption>
+                </figure>
+            </div>
+
+            <h4 class="font-bold text-brand-charcoal mt-6">Evolution of the Guardian: The Chowkidar</h4>
+            <p>An ethnoarchaeological parallel is found in the transition of the Chowkidar (guardian). Archaeological evidence at Kikawada shows figures carrying traditional swords and shields. In contemporary Pithora paintings, this role has been updated to include human figures with guns, representing policemen or soldiers. This integration of modern elements, a process of "heritagisation.” demonstrates the Rathwa’s ability to absorb the tools of the present into an ancient spiritual framework without diminishing ritual value.</p>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/d0BydFFY/Martial-figures-30.jpg" alt="Martial figures, Kikawada village base rock art site" loading="lazy" class="w-full rounded shadow object-cover h-64">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Martial figures, Kikawada village base rock art site</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/9fp7T22V/Modern-Chowkidar-31.png" alt="Modern chowkidar illustrated in Pithora" loading="lazy" class="w-full rounded shadow object-cover h-64">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Modern chowkidar illustrated in Pithora</figcaption>
+                </figure>
+            </div>
+
+            <h4 class="font-bold text-brand-charcoal mt-6">Ecological Realism and the Naturalistic Landscape</h4>
+            <p>Naturalistic portrayals of fauna at Chitra Dungri and Mandva Sil include humped bulls, peacocks, and chickens. In Pithora writings, these are essential to creating an Akho Pithoro (a complete Pithora), representing the totality of the universe. Humped Bulls are linked to the farming couple Abho Kunbi and Mathari, ensuring livestock prosperity. Peacocks represent fertility and serve as vehicles for goddesses, while Chickens provide the historical anchor for contemporary sacrificial rituals.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/SKrM84hv/Humped-bulls-32.jpg" alt="Humped bulls, Chitra Dungri rock art site" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Humped bulls, Chitra Dungri rock art site</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/Y9rQy9Rm/Abho-kunbi-Mathari-33.jpg" alt="Abho Kunbi and Mathari illustrated in Pithora with cows and bulls" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Abho Kunbi and Mathari illustrated in Pithora with cows and bulls</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/g0DZRpWB/Humped-bull-34.jpg" alt="A humped bull, important in the current landscape" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">A humped bull, important in the current landscape</figcaption>
+                </figure>
+            </div>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-clay mt-8 mb-4">II) Parallels in Ritual Materiality and Offerings</h3>
+            <p>The objects used in rituals today mirror images found in the archaeological record, suggesting that the act of "offering" has evolved from a painted representation into a three-dimensional artifact.</p>
+
+            <h4 class="font-bold text-brand-charcoal mt-6">The Terracotta Lineage: Ritual Horse Offerings</h4>
+            <p>A profound continuity is the offering of clay horses to Pithoradeva. In the Kumbharwada (potters' lane), families have maintained this craft for generations. Potters like Rakeshbhai and Dayabhai Kumbhara describe the clay horse as a vessel that carries prayers to the celestial realm. These craftsmen also produce kodiyu (lamps) and deras (miniature shrines), translating two-dimensional rock imagery into three-dimensional ritual objects.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/N0YX5MWV/Electric-wheel-35.jpg" alt="The electric wheel on which clay horses are made" loading="lazy" class="w-full rounded shadow object-cover h-64">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">The electric wheel on which clay horses are made</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/s2yWvXtq/finished-clay-horse-36.jpg" alt="The finished clay horse" loading="lazy" class="w-full rounded shadow object-cover h-64">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">The finished clay horse</figcaption>
+                </figure>
+            </div>
+
+            <h4 class="font-bold text-brand-charcoal mt-6">Avian sacrifices: The Chicken from Mandva Sil to Pithora</h4>
+            <p>The depiction of chickens at Mandva Sil provides a historical anchor for the contemporary sacrifice of chickens overseen by the Badwa (shaman) during the Makai ni Vidhi (blessing of grains).</p>
+             <figure class="my-6 reveal cursor-pointer image-container">
+                <img src="https://i.postimg.cc/8CH6WGG7/Painting-of-a-chicken-37.jpg" alt="Painting of a chicken in white in the Mandva Sil rock art site, enhanced using Dstretch" loading="lazy" class="w-full h-auto rounded-lg shadow-md object-cover h-64">
+                <figcaption class="text-center text-xs text-gray-500 mt-2 italic">Painting of a chicken in white in the Mandva Sil rock art site, enhanced using Dstretch</figcaption>
+            </figure>
+
+            <h4 class="font-bold text-brand-charcoal mt-6">Martial Offerings</h4>
+            <p>Similarly, painitings of figures with swords and shields at Kikawada represent objects that are now sanctified. In the Pithora ritual, swords are placed near the wall as symbolic weapons for the gods, reflecting the transformation of a tool of warfare into a sanctified emblem of guardianship. In some rituals, the Badva may even use a sword to perform specific cleansing motions, mirroring the posture of the ancient warriors depicted in the rock shelters of Chota Udepur.</p>
+            <p class="mt-2">The bow and arrow in Chhota Udepur represent a definitive case of ethnoarchaeological continuity, evolving through three distinct phases: subsistence, warfare, and modern ceremonial use. Today, while the bow is no longer a primary hunting tool or a weapon of resistance, it remains a vital ritual offering at the base of the Pithora wall to honour the Khatrij Dev (ancestors), seeking success in contemporary "hunts" such as harvest and prosperity.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 reveal">
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/NMjrknGC/Sword-offering-38.jpg" alt="The sword used as an object of sacred offering" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">The sword used as an object of sacred offering</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/N0YX5MWR/Bows-and-arrows-39.jpg" alt="Bow and arrows as offerings in a Pithora ritual" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Bow and arrows as offerings in a Pithora ritual</figcaption>
+                </figure>
+                <figure class="cursor-pointer image-container">
+                    <img src="https://i.postimg.cc/hGgmfjHH/Eklavya-Archery-academy-40.png" alt="Eklavya Archery academy, Nannupura" loading="lazy" class="w-full rounded shadow object-cover h-48">
+                    <figcaption class="text-xs text-center text-gray-500 mt-2">Eklavya Archery academy, Nannupura</figcaption>
+                </figure>
+            </div>
+
+            <h3 class="font-serif text-2xl font-bold text-brand-clay mt-8 mb-4">III) Spatial Consumption: From Cave Walls to the Domestic Hearth</h3>
+            <p>Ancient rock art is typically found on cave ceilings, locations offering "otherworldliness." Locals color-coded these sites as Dhorabhutoni Ghodi (white paintings) and Lalbhutoni Ghodi (red paintings). The Pithora shifts this "privatization" of the ritual to the interior walls of the home, specifically the wall dividing the osari (veranda) from the kitchen.</p>
+            <p>However, the preparation of space maintains an ethnoarchaeological parallel. The ancient artists selected specific stone textures; similarly, the Rathwa prepare walls with Lipai (cow dung, water, and Pandu or white clay). This seven-day process performed by unmarried girls essentially creates a purified, rock-like surface for divine "writing." The "sacred enclosure" of the writing mimics the natural boundaries of a cave.</p>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="reveal bg-brand-charcoal text-brand-sand p-8 md:p-12 rounded-xl mt-12 shadow-xl">
+            <h2 class="font-serif text-3xl font-bold mb-6 text-brand-ochre">Conclusion</h2>
+            <p class="mb-4">In conclusion, the Pithora tradition of Chota Udepur transcends the narrow modern classification of "folk art," revealing itself instead as a sophisticated and resilient system of ritual literacy. By repositioning the Pithora as a "sacred writing" rather than a mere decorative mural, this study highlights its role as a living archive of Rathwa cosmology, social hierarchy, and collective memory.</p>
+            <p>Ultimately, shifting the scholarly gaze from "art history" to "ritual literacy" provides a more authentic framework for understanding the Pithora, not as a relic of a "primitive" past, but as a sophisticated, proprietary language that continues to bridge the gap between ancient petroglyphs and the living present.</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1A1A1A] text-gray-400 py-12 text-sm">
+        <div class="text-center border-t border-gray-800 pt-6 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2026 The Aakriti Project | Based on research by Abhik Mukherjee</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal for Images -->
+    <div id="lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden flex flex-col justify-center items-center p-4 sm:p-8">
+        <button id="lightbox-close" class="absolute top-6 right-6 text-white hover:text-brand-clay p-2 transition-colors">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <img id="lightbox-img" src="" alt="Expanded Image" class="max-w-full max-h-[80vh] object-contain rounded shadow-2xl">
+        <p id="lightbox-caption" class="text-gray-300 mt-4 text-center text-sm md:text-base italic max-w-2xl"></p>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Reading Progress Bar
+            const progressBar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + '%';
+            });
+
+            // Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => revealOnScroll.observe(el));
+
+            // Lightbox Logic
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const lightboxClose = document.getElementById('lightbox-close');
+            const imageContainers = document.querySelectorAll('.image-container');
+
+            imageContainers.forEach(container => {
+                container.addEventListener('click', () => {
+                    const img = container.querySelector('img');
+                    const caption = container.querySelector('figcaption');
+                    
+                    if(img) {
+                        lightboxImg.src = img.src;
+                        lightboxCaption.textContent = caption ? caption.textContent : '';
+                        lightbox.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                    }
+                });
+            });
+
+            const closeLightbox = () => {
+                lightbox.classList.add('hidden');
+                document.body.style.overflow = '';
+                // slight delay to clear src so it doesn't flash old image next time
+                setTimeout(() => lightboxImg.src = '', 300);
+            };
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                    closeLightbox();
+                }
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        });
+    </script>
+</body>
+</html>
